@@ -1,3 +1,25 @@
+const { graphql, buildSchema } = require('graphql');
+
+var schema = buildSchema(`
+	type Query {
+		hello: String
+	}
+`);
+
+var rootValue = {
+  hello: () => {
+    return 'Hello world!';
+  }
+};
+
+graphql({
+  schema,
+  source: '{ hello }',
+  rootValue
+}).then((response) => {
+  console.log(response);
+});
+
 export default function Bodega() {
   return (
     <div className="container mx-auto flex min-h-screen flex-col items-center justify-center">
