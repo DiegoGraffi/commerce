@@ -1,38 +1,51 @@
-const { graphql, buildSchema } = require('graphql');
+import { shopifyFetch } from 'lib/shopify';
+import Image from 'next/image';
 
-var schema = buildSchema(`
-	type Query {
-		hello: String
-	}
-`);
+function graphql(queries) {
+  return queries.join('\n');
+}
 
-var rootValue = {
-  hello: () => {
-    return 'Hello world!';
-  }
-};
+export default async function Bodega() {
+  const query = graphql`
+    {
+      collectionByHandle(handle: "roberto-bonfanti") {
+        description
+        title
+        image {
+          url
+        }
+        products(first: 10) {
+          nodes {
+            title
+            description
+            images(first: 1) {
+              nodes {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
 
-graphql({
-  schema,
-  source: '{ hello }',
-  rootValue
-}).then((response) => {
-  console.log(response);
-});
+  const data = await shopifyFetch({ query });
 
-export default function Bodega() {
+  console.log(data);
+
+  const collection = data.body.data.collectionByHandle;
+
   return (
     <div className="container mx-auto flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold uppercase ">pagina bodega</h1>
-      <p className="text-md mt-9 text-center opacity-70">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae quam purus. Maecenas
-        non enim lacus. Morbi facilisis, augue et feugiat rutrum, erat metus fringilla urna, non
-        porta urna purus imperdiet erat. Suspendisse suscipit, lacus a laoreet faucibus, dolor odio
-        tempus enim, eu bibendum est diam sed tortor. Praesent eget porta magna. Donec sapien lorem,
-        rutrum nec dolor a, consequat interdum lacus. Vivamus nec accumsan eros. Mauris porttitor
-        nunc a nisl bibendum, id fringilla arcu tempor. Integer sit amet metus ligula. Fusce lectus
-        nisi, hendrerit sed augue at, luctus tincidunt velit. Vestibulum vel ipsum diam.
-      </p>
+      <h1 className="text-3xl font-bold uppercase ">{collection.title}</h1>
+      <p className="text-md mt-9 text-center opacity-70">{collection.description}</p>
+      <div className="relative  aspect-video w-80">
+        <Image src={collection.image.url} alt="imagen" fill className="object-cover" />
+      </div>
+
+      {collection.products.nodes.map((product) => {
+        return <p key={product.id}>{product.title}</p>;
+      })}
     </div>
   );
 }
