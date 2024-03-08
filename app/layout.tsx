@@ -1,4 +1,5 @@
-import Navbar from 'components/layout/navbar';
+import Footer from 'components/nuestros/footer';
+import Navbar from 'components/nuestros/nav-bar';
 import { GeistSans } from 'geist/font';
 import { ensureStartsWith } from 'lib/utils';
 import { ReactNode, Suspense } from 'react';
@@ -30,15 +31,17 @@ export const metadata = {
       }
     })
 };
+<div></div>;
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={GeistSans.variable}>
-      <body className="bg-neutral-50 text-black selection:bg-teal-300 dark:bg-neutral-900 dark:text-white dark:selection:bg-pink-500 dark:selection:text-white">
+      <body className="flex min-h-screen flex-col justify-between">
         <Navbar />
         <Suspense>
           <main>{children}</main>
         </Suspense>
+        <Footer />
       </body>
     </html>
   );
