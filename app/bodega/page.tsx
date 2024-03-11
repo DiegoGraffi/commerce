@@ -3,10 +3,7 @@ import { shopifyFetch } from 'lib/shopify';
 import Image from 'next/image';
 import FondoBodega from '../../public/images/fondoBodega.png';
 
-{
-  /** @ts-ignore */
-}
-function graphql(queries) {
+function graphql(queries: any) {
   return queries.join('\n');
 }
 
@@ -28,12 +25,7 @@ export default async function Bodega() {
                 url
               }
             }
-            priceRangeV2 {
-              maxVariantPrice {
-                amount
-                currencyCode
-              }
-            }
+
             productType
           }
         }

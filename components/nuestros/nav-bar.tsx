@@ -1,4 +1,5 @@
 import { ShoppingCart } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Navbar() {
   return (
@@ -7,18 +8,18 @@ export default function Navbar() {
         <p className="text-[20px] font-black text-white">LCDLF</p>
 
         <div className="flex items-center gap-[35px]">
-          <a
-            href="#"
+          <Link
+            href="/"
             className="cursor-pointer border-b border-b-transparent p-1 text-[16px] font-light text-white transition-all duration-200 ease-in-out hover:border-b-white hover:text-[#cccccc]"
           >
             Inicio
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            href="/bodega"
             className="cursor-pointer border-b border-b-transparent p-1 text-[16px] font-light text-white transition-all duration-200 ease-in-out hover:border-b-white hover:text-[#cccccc]"
           >
             Bodega
-          </a>
+          </Link>
           <div className=" group flex cursor-pointer items-center justify-center rounded-md border border-[rgba(0,0,0,.3)] bg-white p-2 transition-all duration-200 ease-in-out hover:bg-[#cccccc]">
             <ShoppingCart color="rgba(0,0,0,.5)" />
           </div>
