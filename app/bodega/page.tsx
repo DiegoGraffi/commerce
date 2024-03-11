@@ -1,16 +1,15 @@
 import { shopifyFetch } from 'lib/shopify';
 
+import ProductCard from 'components/nuestros/product-card';
 import Image from 'next/image';
 import FondoBodega from '../../public/images/fondoBodega.png';
 
-function graphql(queries: any) {
-  return queries.join('\n');
-}
+const bodega = 'roberto-bonfanti';
 
 export default async function Bodega() {
-  const query = graphql`
+  const query = `
     {
-      collectionByHandle(handle: "roberto-bonfanti") {
+      collectionByHandle(handle: "${bodega}") {
         description
         title
         image {
@@ -25,7 +24,7 @@ export default async function Bodega() {
                 url
               }
             }
-
+						
             productType
           }
         }
@@ -33,20 +32,26 @@ export default async function Bodega() {
     }
   `;
 
-  const data = await shopifyFetch({ query });
+  const data: any = await shopifyFetch({ query });
 
-  console.log(data);
+  console.log(data.body);
 
   return (
     <div className="min-h-screen w-[100%] items-center justify-center overflow-hidden">
       <section className="relative h-screen min-h-screen w-screen items-center justify-center">
         <div className="absolute top-0 h-[100%] w-[100%]">
-          <Image src={FondoBodega} alt="fondo" fill className="object-cover" />
+          <Image
+            src={data.body.data.collectionByHandle.image.url}
+            alt="fondo"
+            fill
+            className="object-cover"
+          />
           <div className="absolute h-[100%] w-[100%] bg-black opacity-50"></div>
         </div>
         <div className="absolute left-1/2 top-1/2 z-10 flex w-[600px] -translate-x-1/2 -translate-y-1/2 transform flex-col items-center justify-center gap-[50px]">
           <h2 className="text-center text-[64px] font-extrabold uppercase text-white">
-            Roberto Bonfanti
+            {/**@ts-ignore */}
+            {data.body.data.collectionByHandle.title}
           </h2>
           <div className="flex gap-[15px]">
             <a
@@ -72,21 +77,7 @@ export default async function Bodega() {
               Vinos con tradición, elaborados con pasión
             </h3>
             <p className="text-[16px] font-normal text-black">
-              Su fundador Roberto Bonfanti, se dedicó desde pequeño al trabajo cultural de los
-              viñedos, siguiendo las costumbres de sus padres y abuelos provenientes de Italia en
-              1915. Tras largos años de espera y con mucho esfuerzo, en el año 2004 logra construir
-              la Bodega.
-              <br />
-              <br />
-              Roberto posee un espíritu incansable por el trabajo cotidiano de las labores
-              culturales en los viñedos. Su día comienza desde muy temprano, siguiendo la cultura de
-              trabajo familiar, para aprovechar al máximo la jornada y poder brindar todo su
-              esfuerzo a esa planta tan noble que es la cepa.
-              <br />
-              <br />
-              Esta casa vinícola, es una Bodega Familiar que tiene la garantía de sus propios
-              dueños, por el seguimiento personalizado, la profesionalidad y la seriedad con la que
-              se elaboran los productos, cuyo objetivo es maximizar la calidad.
+              {data.body.data.collectionByHandle.description}
             </p>
           </div>
 
@@ -111,8 +102,19 @@ export default async function Bodega() {
             <div className="flex basis-1/3 flex-col border">
               <p className="text-black">sdjkfhskdjfhsk</p>
             </div>
-            <div className="grid basis-3/4 border">
-              <p className="text-black">askldaskljd</p>
+            <div className="grid basis-3/4 gap-3 md:grid-cols-2 lg:grid-cols-3 ">
+              {/**@ts-ignore */}
+              {data.body.data.collectionByHandle.products.nodes.map((product, index) => (
+                <h4 key={index} className="text-black">
+                  {/**@ts-ignore */}
+                  <ProductCard
+                    imageUrl={product.images.nodes[0].url}
+                    productName={product.title}
+                    price={12354}
+                    currencyCode="$"
+                  />
+                </h4>
+              ))}
             </div>
           </div>
         </div>
